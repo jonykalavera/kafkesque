@@ -1,5 +1,5 @@
 import os
-from django.core.handlers.asgi import logger
+# from django.core.handlers.asgi import logger
 import logging
 from channels.consumer import AsyncConsumer
 import json
