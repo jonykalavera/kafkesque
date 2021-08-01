@@ -25,3 +25,6 @@ class WebhookConfig(models.Model):
     batch_size = models.SmallIntegerField(blank=True, null=True, default=None)
     # Post request triggered either when batch size is reached or when max interval time reached.
     batch_max_interval = models.IntegerField(blank=True, null=True, default=None) # Batch max interval in seconds
+
+    class Meta:
+        app_label = "kafkesque.consumers"

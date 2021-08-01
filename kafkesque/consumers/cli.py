@@ -5,7 +5,7 @@ import click
 @click.pass_context
 @click.option('--verbose', '-v', is_flag=True, help="Increase output verbosity level")
 def main(ctx, verbose):
-    group_commands = ['ls', 'play']
+    group_commands = ['ls', 'stop']
     if ctx.invoked_subcommand is None:
         click.echo("Specify one of the commands below")
         print(*group_commands, sep='\n')
@@ -28,7 +28,7 @@ def ls(ctx, long, active=True):
         long: show long description
         active: show only active webhooks
     """
-    click.echo('Existing webhooks:')
+    click.echo('Existing webhooks: To implement')
 
 
 
