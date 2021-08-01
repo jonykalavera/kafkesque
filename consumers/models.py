@@ -17,7 +17,7 @@ class SerializationFormat(Enum):
 class WebhookConfig(models.Model):
 
     url = models.URLField()
-    topic = models.CharField(max_length=200)
+    topics = models.CharField(max_length=300)
     serialization_format = models.CharField(choices=enum_as_choices(SerializationFormat), default=SerializationFormat,
                                             max_length=100)
     status = models.CharField(choices=enum_as_choices(WebhookStatus), default=WebhookStatus.ACTIVE, max_length=100)

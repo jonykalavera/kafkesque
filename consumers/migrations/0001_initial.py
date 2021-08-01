@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('url', models.URLField()),
-                ('topic', models.CharField(max_length=200)),
+                ('topics', models.CharField(max_length=200)),
                 ('serialization_format', models.CharField(choices=[('json', 'JSON'), ('xml', 'XML')], default=consumers.models.SerializationFormat, max_length=100)),
                 ('status', models.CharField(choices=[('ACTIVE', 'ACTIVE'), ('INACTIVE', 'INACTIVE')], default=consumers.models.WebhookStatus['ACTIVE'], max_length=100)),
                 ('ts_expire', models.DateTimeField(blank=True, default=None, null=True)),

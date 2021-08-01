@@ -2,6 +2,7 @@ MANDATORY_WEBHOOK_PARAMS = ['topic', 'webhook']
 import validators
 
 
+# Looks like not needed with pydantic
 def validate_webhook_request(params):
     for p in MANDATORY_WEBHOOK_PARAMS:
         if p not in params:

@@ -1,9 +1,36 @@
 version: '3.6'
+
 services:
 
-    redis:
-      image: 'bitnami/redis:latest'
-      ports:
-        - 6379:6379
-      environment:
-          - ALLOW_EMPTY_PASSWORD=yes
+  web:
+    build:
+      context: .
+    environment:
+      ENV: local
+      REDIS_HOSTS: redis:6379
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    volumes:
+      - .:/usr/src/app
+    command: python manage.py runserver 0.0.0.0:8000
+
+  worker:
+    build:
+      context: .
+    environment:
+      ENV: local
+      REDIS_HOSTS: redis:6379
+    depends_on:
+      - redis
+    volumes:
+      - .:/usr/src/app
+    command: python manage.py runworker kafka-consume
+
+  redis:
+    image: 'bitnami/redis:latest'
+    ports:
+      - 6379:6379
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
