@@ -3,8 +3,8 @@ from django.http.response import HttpResponse
 from channels.layers import get_channel_layer
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from consumers.util import validate_webhook_request
-from consumers.models import WebhookConfig
+from .util import validate_webhook_request
+from .models import WebhookConfig
 
 
 logger = logging.getLogger(__name__)

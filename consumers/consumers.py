@@ -1,20 +1,18 @@
 import os
-# from django.core.handlers.asgi import logger
 import logging
 from channels.consumer import AsyncConsumer
 import json
 from confluent_kafka import Consumer
 import httpx
 from redis import Redis
-# from .dispatchers import run_dispatcher
 import asyncio
 
 
 logger = logging.getLogger(__name__)
 
 KAFKA_BOOTSTRAP_SERVERS = os.getenv('KAFKA_BOOTSTRAP_SERVERS', '192.168.178.25:9093')
-
 REDIS_CLIENT = Redis()
+
 
 class KafkaConsumerConsumer(AsyncConsumer):
     async def kafka_consume(self, config):
