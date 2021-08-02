@@ -5,7 +5,9 @@ import click
 @click.pass_context
 @click.option('--verbose', '-v', is_flag=True, help="Increase output verbosity level")
 def main(ctx, verbose):
-    group_commands = ['ls', 'stop']
+    """ CLI root
+    """
+    group_commands = ['register', 'delete', 'ls', 'stop', 'start']
     if ctx.invoked_subcommand is None:
         click.echo("Specify one of the commands below")
         print(*group_commands, sep='\n')
@@ -14,12 +16,44 @@ def main(ctx, verbose):
     ctx.obj['VERBOSE'] = verbose
 
 
+@main.command('register')
+@click.pass_context
+@click.option('--url', '-u', click.STRING,
+              help="Webhook URL", required=True)
+@click.option('--topic', '-t', click.STRING, # Should we allow to subscribe to multiple topics? In that case it should be "--topics".
+              help="Kafka topic to subscribe to", required=True)
+# TODO: add more
+def register_webhook(ctx, long, active=True):
+    """ Register new webhook for kafka topic.
+
+    Args:
+        ctx: context
+        long: show long description
+        active: show only active webhooks
+    """
+    click.echo('Existing webhooks: To implement')
+
+
+@main.command('delete')
+@click.pass_context
+@click.option('--id', '-i', click.INT,
+              help="Webhook id")
+def delete_webhook(ctx, long, active=True):
+    """ Delete webhook
+
+    Args:
+        ctx: context
+        long: show long description
+        active: show only active webhooks
+    """
+    click.echo('Existing webhooks: To implement')
+
 @main.command('ls')
 @click.pass_context
 @click.option('--long', '-l', is_flag=True,
-              help="Detailed description")
+              help="Show in long format")
 @click.option('--active', '-a', is_flag=True,
-              help="Detailed description")
+              help="Show only active webhooks")
 def ls(ctx, long, active=True):
     """ Show existing webhooks
 
