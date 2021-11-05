@@ -7,6 +7,7 @@ from confluent_kafka import Consumer, Message
 import httpx
 from django.conf import settings
 
+
 logger = logging.getLogger(__name__)
 
 
