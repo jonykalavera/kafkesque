@@ -29,9 +29,10 @@ jobs:
     # CircleCI will report the results back to your VCS provider.
     steps:
       - checkout
-      - run:
-          name: Install prerequisites
-          command: sudo apt update && sudo apt install -y librdkafka-dev
+      - run: wget -qO - https://packages.confluent.io/deb/7.0/archive.key | sudo apt-key add -
+      - run: sudo add-apt-repository "deb [arch=amd64] https://packages.confluent.io/deb/7.0 stable main"
+      - run: sudo add-apt-repository "deb https://packages.confluent.io/clients/deb $(lsb_release -cs) main"
+      - run: sudo apt update && sudo apt install -y librdkafka-dev
       - python/install-packages:
           pkg-manager: poetry
           # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
