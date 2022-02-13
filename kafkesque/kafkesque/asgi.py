@@ -13,7 +13,6 @@ application = ProtocolTypeRouter(
         "channel": ChannelNameRouter(
             {
                 "kafka-consume": consumers.KafkaConsumerConsumer.as_asgi(),
-                # "thumbnails-delete": consumers.PrintConsumer.as_asgi(),
             }
         ),
     }

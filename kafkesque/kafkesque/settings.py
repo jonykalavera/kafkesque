@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "channels",
-#    "kafkesque.consumers",
+    "consumers",
+    "producers",
+    "clusters",
 ]
 
 MIDDLEWARE = [
@@ -79,8 +81,12 @@ ASGI_APPLICATION = "kafkesque.asgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": os.getenv("DATABASE_ENGINE", "django.db.backends.postgresql"),
+        "NAME": os.getenv("DATABASE_NAME", "kafkesque"),
+        "USER": os.getenv("DATABASE_USER", "kafkesque"),
+        "PASSWORD": os.getenv("DATABASE_PASSWORD", "kafkesque"),
+        "HOST": os.getenv("DATABASE_HOST", "127.0.0.1"),
+        "PORT": os.getenv("DATABASE_PORT", "5432"),
     }
 }
 

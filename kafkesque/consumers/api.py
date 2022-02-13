@@ -1,54 +1,36 @@
+""" Consumers api.
+"""
 import logging
-from typing import List, Optional
+from typing import List
 
-from channels.layers import get_channel_layer
-from ninja import Router, Schema
-from pydantic import HttpUrl
-from .models import WebhookConfig
+from ninja import Router
+from ninja.errors import ValidationError
 
-channel_layer = get_channel_layer()
+from consumers import commands
+from consumers.schemas import ConsumerSchema, CreateConsumerSchema
+
+
 router = Router()
 logger = logging.getLogger(__name__)
 
 
-class ConsumerRequest(Schema):
-    name: str
-    topics: List[str]
-    format: str = "json"
-    auto_offset_reset: str = "earliest"
-    webhook_url: Optional[HttpUrl]
-    ts_expire: Optional[str] = None
-    batch_size: Optional[int] = 1
-    max_batch_interval: Optional[int] = None
+@router.post("/", response={201: ConsumerSchema})
+def create_consumer(_request, cmd: CreateConsumerSchema):
+    """Create consumer."""
+    try:
+        instance = commands.create_consumer(cmd)
+    except ValueError as err:
+        raise ValidationError(err)
+    return ConsumerSchema.from_django(instance)
 
 
-@router.post("/")
-async def create_consumer(request, consumer: ConsumerRequest):
-    await channel_layer.send(
-        "kafka-consume",
-        {
-            "type": "kafka.consume",
-            "topics": consumer.topics,
-            "name": consumer.name,
-            "format": consumer.format,
-            "auto.offset.reset": consumer.auto_offset_reset,
-            "webhook": consumer.webhook_url,
-        },
-    )
+@router.get("/", response={200: List[ConsumerSchema]})
+def get_consumers(request) -> List[ConsumerSchema]:
+    """Get consumers"""
+    consumers = commands.get_consumers()
+    return [ConsumerSchema.from_django(o) for o in consumers]
 
-    # Check if exactly the same config already exists
-    _, created = WebhookConfig.objects.update_or_create(
-        url=consumer.webhook_url,
-        topics=consumer.topics,
-        defaults={
-            'serialization_format': consumer.format,
-            'ts_expire': consumer.ts_expire,
-            'batch_size': consumer.batch_size,
-            'batch_max_interval': consumer.max_batch_interval
-        }
-    )
-    if created:
-        logger.info('Created new webhook for URL: %s, topics: %s', consumer.webhook_url, str(consumer.topics))
-    else:
-        logger.info('Updated webhook for URL: %s, topic: %s', consumer.webhook_url, str(consumer.topics))
 
+@router.post("/{consumer_id}/start")
+async def start_consumer(_request, consumer_id):
+    await commands.start_consumer(consumer_id)
