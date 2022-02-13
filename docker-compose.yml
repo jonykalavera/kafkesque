@@ -6,27 +6,39 @@ services:
     build:
       context: .
     environment:
-      ENV: local
+      APPLICATION_ENV: dev
       REDIS_HOSTS: redis:6379
+      DATABASE_HOST: database
+      DATABASE_PORT: 5432
+      DATABASE_NAME: kafkesque
+      DATABASE_USER: kafkesque
+      DATABASE_PASSWORD: kafkesque
     ports:
       - "8000:8000"
     depends_on:
+      - database
       - redis
     volumes:
       - .:/usr/src/app
-    command: python manage.py runserver 0.0.0.0:8000
+    command: "/root/.local/bin/poetry run python ./kafkesque/manage.py runserver 0.0.0.0:8000"
 
   worker:
     build:
       context: .
     environment:
-      ENV: local
+      APPLICATION_ENV: dev
       REDIS_HOSTS: redis:6379
+      DATABASE_HOST: database
+      DATABASE_PORT: 5432
+      DATABASE_NAME: kafkesque
+      DATABASE_USER: kafkesque
+      DATABASE_PASSWORD: kafkesque
     depends_on:
+      - database
       - redis
     volumes:
       - .:/usr/src/app
-    command: python manage.py runworker kafka-consume
+    command: "/root/.local/bin/poetry run python kafkesque/manage.py runworker kafka-consume"
 
   redis:
     image: 'bitnami/redis:latest'
@@ -34,3 +46,12 @@ services:
       - 6379:6379
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
+
+  database:
+    image: postgres:14
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: kafkesque
+      POSTGRES_USER: kafkesque
+      POSTGRES_PASSWORD: kafkesque

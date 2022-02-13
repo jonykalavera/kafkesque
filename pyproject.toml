@@ -5,16 +5,18 @@ description = ""
 authors = ["Jony Kalavera <mr.jony@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
 django = "^3.2.5"
 channels = "^3.0.4"
-confluent-kafka = "^1.7.0"
 channels_redis = "^3.3.0"
 asgiref = "3.3.4"
 httpx = "^0.18.2"
 django-ninja = "^0.13.2"
 pydantic = "^1.8.2"
 click = "^8.0.1"
+confluent-kafka = "^1.7.0"
+psycopg2 = "^2.9.3"
+djantic = "^0.4.1"
 
 [tool.poetry.dev-dependencies]
 black = "^21.7b0"

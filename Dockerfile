@@ -1,11 +1,11 @@
-FROM python:3
+FROM python:3.10
 
 WORKDIR /usr/src/app
 
 COPY pyproject.toml ./
 COPY poetry.lock ./
-RUN pip install 'poetry==1.1.7'
-RUN poetry export -f requirements.txt --without-hashes -o requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN curl -sSL https://install.python-poetry.org | python3 -
+RUN apt update && apt install -y librdkafka-dev
+RUN $HOME/.local/bin/poetry install
 
 COPY . .
